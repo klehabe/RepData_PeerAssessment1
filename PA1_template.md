@@ -33,7 +33,7 @@ colnames(steps_per_day) <- c("Date", "Steps")
 hist(steps_per_day$Steps, main="Total Number Of Steps Per Day", col="red", xlab="Total Steps per day")
 ```
 
-![plot of chunk Mean steps per day](figure/Mean steps per day-1.png)
+![plot of chunk MeanStepsperday](figure/MeanStepsperday-1.png)
 
 ```r
 # Calculate the mean
@@ -74,7 +74,7 @@ with(steps_per_interval,
           ylab="Average Steps Per Interval Across All Days"))
 ```
 
-![plot of chunk Average Pattern per day](figure/Average Pattern per day-1.png)
+![plot of chunk AveragPatternperDay](figure/AveragPatternperDay-1.png)
 
 
 ```r
@@ -114,7 +114,7 @@ colnames(steps_per_day_all) <- c("Date", "Steps")
 hist(steps_per_day_all$Steps, main="Total Number Of Steps Per Day", col="red", xlab="Total Steps per day")
 ```
 
-![plot of chunk Averge steps per day for all records](figure/Averge steps per day for all records-1.png)
+![plot of chunk Avergesteppeday](figure/Avergesteppeday-1.png)
 
 ```r
 # Calculate the mean and median
