@@ -6,14 +6,16 @@
 
   
 Read in the Activity.csv input file.
-```{r Read in Activity Data} 
+
+```r
 activity <- read.csv("activity.csv")
 ```
 Checking the data, I noticed that there were some NA values in the steps column.
 These will impact the results, therefore we need to remove them. 
 Also convert the date column to Date format.
 
-```{r Clean up Data}
+
+```r
 # Convert date field from factor to date
  activity$date <- as.Date(activity$date)
 # Remove NAs
@@ -22,21 +24,38 @@ Also convert the date column to Date format.
 
 ## Steps Per Day
 The histogram below shows how the averages steps per day are distributed. 
-```{r Mean steps per day}
+
+```r
 # Sum the Steps per day excluding NAs
 steps_per_day <-aggregate(activity_no_NA$steps ~ activity_no_NA$date, FUN=sum, )
 colnames(steps_per_day) <- c("Date", "Steps")
 #Create a histogram
 hist(steps_per_day$Steps, main="Total Number Of Steps Per Day", col="red", xlab="Total Steps per day")
+```
+
+![plot of chunk Mean steps per day](figure/Mean steps per day-1.png)
+
+```r
 # Calculate the mean
 mean(steps_per_day$Steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(steps_per_day$Steps)
 ```
-The mean steps taken per day is `r mean(steps_per_day$Steps)`  and the median steps per day is `r median(steps_per_day$Steps)` .
+
+```
+## [1] 10765
+```
+The mean steps taken per day is 1.0766189 &times; 10<sup>4</sup>  and the median steps per day is 10765 .
 
 ## Average Daily Pattern
-```{r Average Pattern per day}
 
+```r
 library(dplyr)
 
 # Get average steps per interval
@@ -53,44 +72,73 @@ with(steps_per_interval,
 		      main= "Average Daily Pattern",
           xlab="5 Minute Intervals",
           ylab="Average Steps Per Interval Across All Days"))
-  ```
+```
 
-```{r Interval with Max steps}
+![plot of chunk Average Pattern per day](figure/Average Pattern per day-1.png)
+
+
+```r
   # Get the max value and the interval 
   max_step <- max(steps_per_interval$average_steps)
   steps_per_interval[steps_per_interval$average_steps== max_step, ]
-``` 
+```
+
+```
+## # A tibble: 1 x 2
+##   interval average_steps
+##      <int>         <dbl>
+## 1      835          206.
+```
     
-On Average the highest number of steps was `r max(steps_per_interval$average_steps)`  in interval `r steps_per_interval[steps_per_interval$average_steps== max(steps_per_interval$average_steps),1]`
+On Average the highest number of steps was 206.1698113  in interval 835
   
 ## Imputing Missing Values.
 
-There are `r sum(is.na(activity))` missing values in the source file. We populate the NAs with the mean for the interval.
+There are 2304 missing values in the source file. We populate the NAs with the mean for the interval.
 
-```{r replace NAs}
+
+```r
 activity_impute <- activity
 na_steps <- is.na(activity_impute$steps)
 mean_steps <- mean(steps_per_interval$average_steps, na.rm=TRUE)
 activity_impute$steps[na_steps] <- mean_steps
 ```
-The histogram below shows how the averages steps per day are distributed when we filled in the NAs. There are no `r sum(is.na(activity_impute))` NA values in the output.
+The histogram below shows how the averages steps per day are distributed when we filled in the NAs. There are no 0 NA values in the output.
 
-```{r Averge steps per day for all records}
+
+```r
 # Sum the Steps per day for everything
 steps_per_day_all <-aggregate(activity_impute$steps ~ activity_impute$date, FUN=sum, )
 colnames(steps_per_day_all) <- c("Date", "Steps")
 #Create a histogram
 hist(steps_per_day_all$Steps, main="Total Number Of Steps Per Day", col="red", xlab="Total Steps per day")
+```
+
+![plot of chunk Averge steps per day for all records](figure/Averge steps per day for all records-1.png)
+
+```r
 # Calculate the mean and median
 mean(steps_per_day_all$Steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(steps_per_day_all$Steps)
 ```
 
-The mean of the new dataframe is and the median `r mean(steps_per_day_all$Steps)`  and the median steps per day is `r median(steps_per_day_all$Steps)` . Based on the observation above, the distribution of the data is similar, with higher frequency in the second plot. The mean did not change and the median changed slightly, being the same as the mean.
+```
+## [1] 10766.19
+```
+
+The mean of the new dataframe is and the median 1.0766189 &times; 10<sup>4</sup>  and the median steps per day is 1.0766189 &times; 10<sup>4</sup> . Based on the observation above, the distribution of the data is similar, with higher frequency in the second plot. The mean did not change and the median changed slightly, being the same as the mean.
 
 ## Activity Patterns: Weekdays vs Weekends.
 
-```{r weekdays}
+
+```r
 #create a new column for day and categorise it
 activity_days <- mutate(activity_impute, day=weekdays(activity_impute$date))
 
@@ -113,7 +161,9 @@ activity_days$day_category <- ifelse( activity_days$day %in% c("Saturday", "Sund
        type="l",
        lty=1
        )
-  ```
+```
+
+![plot of chunk weekdays](figure/weekdays-1.png)
   
 Based on the plot above, there seems to be a difference in weekday vs weekend activities. Overall the weekend activity seems to be higher than weekday. However we see the highest activity observed on a weekday.
 
